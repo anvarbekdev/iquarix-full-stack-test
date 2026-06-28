@@ -1,0 +1,6 @@
+services:
+  simulator:
+    build: ./simulator
+    env_file:
+      - ./simulator/.env
+    restart: unless-stopped
