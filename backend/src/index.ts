@@ -1,28 +1,19 @@
 import 'dotenv/config';
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
-import pg from 'pg';
+import { pool, runMigrations } from './db';
 
 const app = Fastify({ logger: true });
 
 app.register(fastifyCors, { origin: true });
 
+app.get('/health', async () => {
+  await pool.query('SELECT 1');
+  return { status: 'ok' };
+});
+
 async function start(): Promise<void> {
-
-  // Testing db connection
-  const client = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  try {
-    await client.connect();
-    const res = await client.query('SELECT NOW()');
-    console.log('DB time:', res.rows[0].now);
-  } catch (error) {
-    console.error('DB error:', error);
-  } finally {
-    await client.end();
-  }
+  await runMigrations();
 
   const port = parseInt(process.env.PORT ?? '3000', 10);
   const host = process.env.HOST ?? '0.0.0.0';
