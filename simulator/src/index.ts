@@ -1,4 +1,4 @@
-import dotenv from ".pnpm/dotenv@17.4.2/node_modules/dotenv/lib/main";
+import dotenv from "dotenv";
 import { loadVehicleTracks } from "./loadData";
 import { Ping, TrackPoint } from "./types";
 
